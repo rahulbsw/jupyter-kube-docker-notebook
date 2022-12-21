@@ -29,15 +29,15 @@ USER ${NB_UID}
 
 # Install Python 3 packages
 
-RUN conda install pytorch torchvision torchaudio cpuonly  -c pytorch  --yes
+RUN mamba install --quiet --yes pytorch torchvision torchaudio cpuonly 
 
-RUN conda install \
+RUN mamba install --quiet --yes \
     tensorflow \
     jax \
     jaxlib \
     optax  
 
-RUN conda install \
+RUN mamba install --quiet --yes \
     transformers \
     datasets\
     nltk \
@@ -48,7 +48,7 @@ RUN conda install \
     nbgrader \
     rise  -c conda-forge --yes
 
-RUN pip install -y \
+RUN mamba install --quiet --yes \
     gradio \
     pycaret[full] \
     pandas-profiling \
