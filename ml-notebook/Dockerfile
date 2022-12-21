@@ -29,24 +29,27 @@ USER ${NB_UID}
 
 # Install Python 3 packages
 
-RUN conda install pytorch torchvision torchaudio cpuonly -c pytorch  --yes
+RUN conda install pytorch torchvision torchaudio cpuonly  -c pytorch  --yes
 
-RUN conda install -c conda-forge \
+RUN conda install \
     tensorflow \
     jax \
     jaxlib \
-    optax  --yes
+    optax  
 
-RUN conda install -c conda-forge \
+RUN conda install \
     transformers \
     datasets\
     nltk \
     pytorch_lightning \
-    gradio \
     sentencepiece \
-    seqeval
+    seqeval \ 
+    fuzzywuzzy \
+    nbgrader \
+    rise  -c conda-forge --yes
 
-RUN conda install -c conda-forge \
+RUN pip install -y \
+    gradio \
     pycaret[full] \
     pandas-profiling \
     modin[all] \
@@ -64,11 +67,5 @@ RUN conda install -c conda-forge \
     xgboost \ 
     composeml \ 
     featuretools[complete] 
-
-RUN conda install -c conda-forge \
-    fuzzywuzzy \
-    nbgrader \
-    rise --yes
-
 
 WORKDIR "${HOME}"
