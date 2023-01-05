@@ -1,0 +1,39 @@
+name: jupyterenv
+channels:
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.9
+  - tensorflow
+  - jupyterlab-plotly-extension 
+  - fuzzywuzzy
+  - nbgrader
+  - pycaret[full]
+  - pandas-profiling
+  - modin[all]
+  - psycopg2-binary
+  #- featurewiz
+  - dataprep
+  - dtale
+  - sweetviz
+  - autoviz
+  - pinotdb
+  - pandasql
+  - python-arango
+  - mysql-connector-python
+  - py-xgboost
+  - composeml
+  - featuretools[complete] 
+  - transformers
+  - datasets
+  - nltk
+  - sentencepiece
+  - seqeval
+  #- fbprophet
+  #- kats
+  - pytorch 
+  - torchvision 
+  - torchaudio 
+  - cpuonly
+  - rise
+  
