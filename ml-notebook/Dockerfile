@@ -1,71 +1,34 @@
-# Copyright (c) Jupyter Development Team.
-# Distributed under the terms of the Modified BSD License.
 ARG OWNER=jupyter
 ARG BASE_CONTAINER=$OWNER/scipy-notebook
 ARG PYTHON_VERSION=3.9
 FROM $BASE_CONTAINER
 
-ENV TRANSFORMERS_CACHE=/tmp/.cache
-ENV TOKENIZERS_PARALLELISM=true
+LABEL maintainer="Rahul Jain"
+LABEL name="datascience-notebook"
+
+# Fix: https://github.com/hadolint/hadolint/wiki/DL4006
+# Fix: https://github.com/koalaman/shellcheck/wiki/SC3014
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 USER root
+
+# Install all OS dependencies for notebook server that starts but lacks all
+# features (e.g., download as all possible file formats)
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y graphviz \
     python3-pydot \
     python3-pygraphviz && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-
-
-
-# Add RUN statements to install packages as the $NB_USER defined in the base images.
-
-# Add a "USER root" statement followed by RUN statements to install system packages using apt-get,
-# change file permissions, etc.
-
-# If you do switch to root, always be sure to add a "USER $NB_USER" command at the end of the
-# file to ensure the image runs as a unprivileged user by default.
-
+    
 USER ${NB_UID}
 
-# Install Python 3 packages
-
-RUN mamba install --quiet --yes pytorch torchvision torchaudio cpuonly 
-
-RUN mamba install --quiet --yes \
-    tensorflow \
-    jax \
-    jaxlib \
-    optax  
-
-RUN mamba install --quiet --yes \
-    transformers \
-    datasets\
-    nltk \
-    pytorch_lightning \
-    sentencepiece \
-    seqeval \ 
-    fuzzywuzzy \
-    nbgrader \
-    rise  -c conda-forge --yes
-
-RUN mamba install --quiet --yes \
-    gradio \
-    pycaret[full] \
-    pandas-profiling \
-    modin[all] \
-    psycopg2-binary \
-    featurewiz \
-    dataprep \
-    dtale \ 
-    sweetviz \
-    autoviz \
-    pinotdb \
-    pandasql \ 
-    python-arango \ 
-    mysql-connector-python \ 
-    scikit-learn \ 
-    xgboost \ 
-    composeml \ 
-    featuretools[complete] 
-
 WORKDIR "${HOME}"
+
+ENV TRANSFORMERS_CACHE=/tmp/.cache
+ENV TOKENIZERS_PARALLELISM=true
+
+COPY environment.yml .
+RUN mamba env create -f environment.yml
+RUN source activate jupyterenv
+RUN echo "source activate jupyterenv" > ${HOME}/.bashrc
